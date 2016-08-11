@@ -1,26 +1,29 @@
 # encoding: utf-8
 import os
-import shutil
+import re
 import time
 import datetime
 
-photoDir = "E:\\baby"
+photoDir = "E:\\YiKS\\BB"
 babyBirthday = datetime.datetime(2016, 4, 29)
 
 
 def parse(srcDir):
     for f in os.listdir(srcDir):
-        file = os.path.join(srcDir, f)
         try:
-            file = unicode(file, "gbk")
+            f = unicode(f, "gbk")
         except Exception,e:
             try:
-                file = unicode(file, "utf8")
+                f = unicode(f, "utf8")
             except Exception,e:
                 pass
+        file = os.path.join(srcDir, f)
         if os.path.isdir(file):
             parse(file)
         else:
+            matchObj = re.match(ur'\d+天\s\(\d{4}-\d{2}-\d{2}\s\d{2}_\d{2}_\d{2}.*', f, re.U)
+            if matchObj:
+                continue
             m_time = os.stat(file).st_mtime
             timeArray = time.localtime(m_time)
             otherStyleTime = time.strftime("%Y-%m-%d %H_%M_%S", timeArray)
